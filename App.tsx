@@ -57,6 +57,7 @@ class App extends React.Component<{}, appstate> {
     };
     return (
       <View style={styles.container}>
+        <Text style={{ fontSize: 25 }}>NarrateMyWay Beacon Setup</Text>
         <RNPickerSelect
           placeholder={{ value: "", label: "Select an item..." }}
           onValueChange={(value) => {
