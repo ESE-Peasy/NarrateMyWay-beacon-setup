@@ -2,25 +2,11 @@ import * as SQLite from "expo-sqlite";
 
 import * as nmwTable from "./nmwstandard.json";
 
-const URI =
-  "https://raw.githubusercontent.com/Andrew-Ritchie/NarrateMyWay/database/app/nmwstandard.json";
-
 // Interface for data
 interface location {
   code: string;
   description: string;
-  emblem: String;
 }
-
-const downloadData = async () => {
-  try {
-    let response = await fetch(URI);
-    let json = await response.json();
-    return json;
-  } catch (error) {
-    console.error(error);
-  }
-};
 
 // Storage Class
 class Storage {
@@ -40,8 +26,6 @@ class Storage {
 
   // Create and populate database tables
   createTable() {
-    // downloadData().then((nmwTable) => {
-
     {
       this.db.transaction((tx) => {
         tx.executeSql(
@@ -117,13 +101,6 @@ class Storage {
     });
   }
 
-  // Delete element from location table
-  deleteElementLocation(id: string) {
-    this.db.transaction((tx) => {
-      tx.executeSql("DELETE FROM locationCodes WHERE id=?", [id]);
-    });
-  }
-
   // Print the version of currently stored data
   printVersionData() {
     this.db.transaction((tx) => {
@@ -133,7 +110,11 @@ class Storage {
     });
   }
 
-  lookupCodesByDepth(categoryDepth: number, parentCode: String, callback: Function) {
+  lookupCodesByDepth(
+    categoryDepth: number,
+    parentCode: String,
+    callback: Function
+  ) {
     if (parentCode == null) {
       parentCode = "0-0-0";
     }
@@ -141,7 +122,7 @@ class Storage {
     let regexedFields = [];
     for (let field of fields) {
       if (field == "0") {
-        regexedFields.push('%');
+        regexedFields.push("%");
       } else {
         regexedFields.push(field);
       }
@@ -150,29 +131,9 @@ class Storage {
     this.db.transaction((tx) => {
       tx.executeSql(
         "SELECT id, description FROM locationCodes WHERE (categoryDepth=? AND id LIKE ?)",
-        [categoryDepth, regexedFields.join('-')],
+        [categoryDepth, regexedFields.join("-")],
         (_, results) => {
           callback(results.rows);
-        }
-      );
-    });
-  }
-
-  // Lookup code description
-  lookupDataForNMWCode(code: String, callback: Function) {
-    this.db.transaction((tx) => {
-      tx.executeSql(
-        "SELECT description FROM locationCodes WHERE id=?",
-        [code],
-        (_, results) => {
-          callback(results.rows.item(0).description);
-        }
-      );
-      tx.executeSql(
-        "SELECT emblem FROM locationCodes WHERE id=?",
-        [code],
-        (_, results) => {
-          callback(results.rows.item(0).emblem);
         }
       );
     });
