@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import * as React from "react";
-import { StyleSheet, Text, View, State } from "react-native";
+import { StyleSheet, Text, View, Platform } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import { Storage } from "./storage";
 
@@ -110,7 +110,17 @@ class App extends React.Component<{}, appstate> {
           disabled={this.state.level1 == "" || this.state.level2 == ""}
           style={styling}
         />
-        <Text>NMW code: nmw:{this.state.nmwCode}</Text>
+        <Text>NMW code:</Text>
+        <Text
+          selectable={true}
+          style={{
+            fontFamily: Platform.OS === "ios" ? "Courier" : "monospace",
+            fontSize: 25,
+            backgroundColor: "#e8e8e8",
+          }}
+        >
+          {this.state.nmwCode == "" ? "-" : "nmw:" + this.state.nmwCode}
+        </Text>
         <StatusBar style="auto" />
       </View>
     );
