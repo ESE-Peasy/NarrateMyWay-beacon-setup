@@ -11,6 +11,7 @@ interface appstate {
   level1Options: [];
   level2Options: [];
   level3Options: [];
+  nmwCode: String;
 }
 
 class App extends React.Component<{}, appstate> {
@@ -29,6 +30,7 @@ class App extends React.Component<{}, appstate> {
       level1Options: [],
       level2Options: [],
       level3Options: [],
+      nmwCode: "",
     };
 
     this.storage.lookupCodesByDepth(1, "0-0-0", (values) =>
@@ -49,20 +51,19 @@ class App extends React.Component<{}, appstate> {
   }
 
   render() {
-    let text: String = "";
-    if (this.state.level3 != "") {
-      text = this.state.level3;
-    } else if (this.state.level2 != "") {
-      text = this.state.level2;
-    } else if (this.state.level1 != "") {
-      text = this.state.level1;
-    }
+    const styling = {
+      inputAndroid: { color: "black" },
+      inputIOS: { color: "black" },
+    };
     return (
       <View style={styles.container}>
         <RNPickerSelect
           placeholder={{ value: "", label: "Select an item..." }}
           onValueChange={(value) => {
             this.setState({ level1: value });
+            if (value != "") {
+              this.setState({ nmwCode: value });
+            }
             this.storage.lookupCodesByDepth(2, value, (values) =>
               this.populateLevel(
                 (data) => this.setState({ level2Options: data }),
@@ -71,10 +72,18 @@ class App extends React.Component<{}, appstate> {
             );
           }}
           items={this.state.level1Options}
+          style={styling}
         />
+
         <RNPickerSelect
+          placeholder={{ value: "", label: "Select an item..." }}
           onValueChange={(value) => {
             this.setState({ level2: value });
+            if (value != "") {
+              this.setState({ nmwCode: value });
+            } else {
+              this.setState({ nmwCode: this.state.level1 });
+            }
             this.storage.lookupCodesByDepth(3, value, (values) =>
               this.populateLevel(
                 (data) => this.setState({ level3Options: data }),
@@ -84,15 +93,24 @@ class App extends React.Component<{}, appstate> {
           }}
           items={this.state.level2Options}
           disabled={this.state.level1 == ""}
+          style={styling}
         />
+
         <RNPickerSelect
+          placeholder={{ value: "", label: "Select an item..." }}
           onValueChange={(value) => {
             this.setState({ level3: value });
+            if (value != "") {
+              this.setState({ nmwCode: value });
+            } else if (this.state.level2 != "") {
+              this.setState({ nmwCode: this.state.level2 });
+            }
           }}
           items={this.state.level3Options}
-          disabled={this.state.level2 == ""}
+          disabled={this.state.level1 == "" || this.state.level2 == ""}
+          style={styling}
         />
-        <Text>NMW code:{this.state.level3}</Text>
+        <Text>NMW code: nmw:{this.state.nmwCode}</Text>
         <StatusBar style="auto" />
       </View>
     );
