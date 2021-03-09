@@ -82,16 +82,6 @@ class Storage {
     }
   }
 
-  // Input location code data
-  loadData(data: location) {
-    this.db.transaction((tx) => {
-      tx.executeSql(
-        "INSERT INTO locationCodes (id, description, emblem) VALUES (? ,?, ?)",
-        [data.code, data.description, data.emblem]
-      );
-    }, null);
-  }
-
   // Clear storage
   clearStorage() {
     this.db.transaction((tx) => {
@@ -119,7 +109,7 @@ class Storage {
       parentCode = "0-0-0";
     }
     const fields = parentCode.split("-");
-    let regexedFields = [];
+    let regexedFields: String[] = [];
     for (let field of fields) {
       if (field == "0") {
         regexedFields.push("%");
