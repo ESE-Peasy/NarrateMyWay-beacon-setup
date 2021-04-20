@@ -1,8 +1,18 @@
 import { StatusBar } from "expo-status-bar";
 import * as React from "react";
-import { StyleSheet, Text, View, Platform } from "react-native";
+import {
+  ToastAndroid,
+  Image,
+  Text,
+  View,
+  Platform,
+  Pressable,
+} from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import { Storage } from "./storage";
+import styles from "./styles/App.styles";
+import logo from "./assets/nmw-logo.png";
+import Clipboard from "expo-clipboard";
 
 interface appstate {
   level1: String;
@@ -54,12 +64,22 @@ class App extends React.Component<{}, appstate> {
     const styling = {
       inputAndroid: { color: "black" },
       inputIOS: { color: "black" },
+      viewContainer: {
+        borderWidth: 1,
+        padding: 10,
+        borderRadius: 25,
+        marginBottom: 10,
+      },
     };
     return (
       <View style={styles.container}>
-        <Text style={{ fontSize: 25 }}>NarrateMyWay Beacon Setup</Text>
+        <View style={styles.titleContainer}>
+          <Image source={logo} style={styles.logo} />
+          <Text style={styles.titleText}>NarrateMyWay Beacon Setup</Text>
+        </View>
+
         <RNPickerSelect
-          placeholder={{ value: "", label: "Select an item..." }}
+          placeholder={{ value: "", label: "Select a top level category..." }}
           onValueChange={(value) => {
             this.setState({ level1: value });
             if (value != "") {
@@ -77,7 +97,10 @@ class App extends React.Component<{}, appstate> {
         />
 
         <RNPickerSelect
-          placeholder={{ value: "", label: "Select an item..." }}
+          placeholder={{
+            value: "",
+            label: "(Optional) Select a middle level category...",
+          }}
           onValueChange={(value) => {
             this.setState({ level2: value });
             if (value != "") {
@@ -98,7 +121,10 @@ class App extends React.Component<{}, appstate> {
         />
 
         <RNPickerSelect
-          placeholder={{ value: "", label: "Select an item..." }}
+          placeholder={{
+            value: "",
+            label: "(Optional) Select a low level category...",
+          }}
           onValueChange={(value) => {
             this.setState({ level3: value });
             if (value != "") {
@@ -111,30 +137,36 @@ class App extends React.Component<{}, appstate> {
           disabled={this.state.level1 == "" || this.state.level2 == ""}
           style={styling}
         />
-        <Text>NMW code:</Text>
-        <Text
-          selectable={true}
-          style={{
-            fontFamily: Platform.OS === "ios" ? "Courier" : "monospace",
-            fontSize: 25,
-            backgroundColor: "#e8e8e8",
-          }}
-        >
-          {this.state.nmwCode == "" ? "-" : "nmw:" + this.state.nmwCode}
-        </Text>
+
+        <View style={styles.codeContainer}>
+          <Text style={styles.codeTitle}>
+            Tap the code below to copy to clipboard:
+          </Text>
+          <Pressable
+            style={styles.codeTextContainer}
+            onPress={() => {
+              if (this.state.level1 != "") {
+                Clipboard.setString("nmw:" + this.state.nmwCode);
+                if (Platform.OS === "android") {
+                  ToastAndroid.show(
+                    'Code "nmw:' +
+                      this.state.nmwCode +
+                      '" copied to clipboard!',
+                    ToastAndroid.SHORT
+                  );
+                }
+              }
+            }}
+          >
+            <Text style={styles.codeText} adjustsFontSizeToFit>
+              {this.state.nmwCode == "" ? "-" : "nmw:" + this.state.nmwCode}
+            </Text>
+          </Pressable>
+        </View>
         <StatusBar style="auto" />
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
 
 export default App;
