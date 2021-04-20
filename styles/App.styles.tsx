@@ -11,6 +11,7 @@ export default StyleSheet.create({
   },
   titleContainer: {
     flex: 1,
+    paddingTop: 20,
     marginBottom: 20,
     justifyContent: "space-evenly",
   },
