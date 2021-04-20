@@ -1,11 +1,40 @@
 import * as SQLite from "expo-sqlite";
 
-import * as nmwTable from "./nmwstandard.json";
+const NMWSTANDARD =
+  "https://raw.githubusercontent.com/ESE-Peasy/NarrateMyWay/main/app/nmwstandard.json";
 
 // Interface for data
 interface location {
   code: string;
   description: string;
+}
+
+type NMWEntry = {
+  code: string;
+  description: string;
+  icon: string;
+};
+
+type NMWTable = {
+  version: string;
+  entries: NMWEntry[];
+};
+
+async function downloadNMWCodes(url: string): Promise<NMWTable> {
+  return new Promise((resolve, _) => {
+    fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        resolve({ version: data.version, entries: data.nmw });
+      });
+  });
 }
 
 // Storage Class
@@ -25,8 +54,9 @@ class Storage {
   }
 
   // Create and populate database tables
-  createTable() {
-    {
+  async createTable(downloadCompletedCallback: Function) {
+    downloadNMWCodes(NMWSTANDARD).then((nmwTable) => {
+      console.log(nmwTable);
       this.db.transaction((tx) => {
         tx.executeSql(
           "CREATE TABLE IF NOT EXISTS locationCodes (id string primary key not null, description text, categoryDepth int);"
@@ -39,7 +69,7 @@ class Storage {
             tx.executeSql("INSERT INTO versionRecord (version) VALUES (?)", [
               nmwTable.version,
             ]);
-            nmwTable.nmw.forEach((value) => {
+            nmwTable.entries.forEach((value) => {
               // Getting depth of code, which will correspond to the number of zeroed fields
               const fields = value.code.split("-");
               let zero_count = 0;
@@ -60,7 +90,7 @@ class Storage {
               nmwTable.version,
             ]);
 
-            nmwTable.nmw.forEach((value) => {
+            nmwTable.entries.forEach((value) => {
               // Getting depth of code, which will correspond to the number of zeroed fields
               const fields = value.code.split("-");
               let zero_count = 0;
@@ -79,7 +109,8 @@ class Storage {
           }
         });
       }, null);
-    }
+      downloadCompletedCallback();
+    });
   }
 
   // Clear storage

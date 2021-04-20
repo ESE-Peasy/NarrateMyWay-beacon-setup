@@ -31,7 +31,14 @@ class App extends React.Component<{}, appstate> {
     super(props);
     this.storage = new Storage();
     this.storage.clearStorage();
-    this.storage.createTable();
+    this.storage.createTable(() =>
+      this.storage.lookupCodesByDepth(1, "0-0-0", (values) =>
+        this.populateLevel(
+          (data) => this.setState({ level1Options: data }),
+          values
+        )
+      )
+    );
 
     this.state = {
       level1: "",
@@ -42,13 +49,6 @@ class App extends React.Component<{}, appstate> {
       level3Options: [],
       nmwCode: "",
     };
-
-    this.storage.lookupCodesByDepth(1, "0-0-0", (values) =>
-      this.populateLevel(
-        (data) => this.setState({ level1Options: data }),
-        values
-      )
-    );
   }
 
   populateLevel(setLevelxOptions: Function, values) {
