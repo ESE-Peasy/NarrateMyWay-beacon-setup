@@ -2,9 +2,12 @@
   "expo": {
     "name": "NarrateMyWay-beacon-setup",
     "slug": "NarrateMyWay-beacon-setup",
+    "owner": "ese-peasy",
+    "description": "Setup application for the NarrateMyWay audio-based navigation system. This application helps organisations set the most appropriate names to beacons for which they are responsible.",
     "version": "0.1.0",
+    "githubUrl": "https://github.com/ESE-Peasy/NarrateMyWay-beacon-setup",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/nmw-logo.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -21,7 +24,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/nmw-logo.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "ese_peasy.narratemyway.narratemyway_beacon_setup",

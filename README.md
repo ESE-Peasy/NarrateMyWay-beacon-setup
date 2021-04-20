@@ -6,8 +6,12 @@ This is a simple mobile application to help determine the correct NMW beacon nam
 
 ## Usage
 
-...
+First, you will need the Expo Go app. Then, scan the QR code [here](https://expo.io/@ese-peasy/projects/NarrateMyWay-beacon-setup) to start our app.
 
 ## Building & Publishing
 
-...
+This app is built and distributed via Expo. To start the build for Android or iOS, run:
+
+```
+expo build:[android|ios]
+```
