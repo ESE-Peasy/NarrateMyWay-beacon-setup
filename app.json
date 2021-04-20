@@ -23,7 +23,9 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "ese_peasy.narratemyway.narratemyway_beacon_setup",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
