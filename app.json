@@ -21,7 +21,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "ese_peasy.narratemyway.narratemyway_beacon_setup",
+      "bundleIdentifier": "esepeasy.narratemyway.narratemywaybeaconsetup",
       "buildNumber": "1.0.0"
     },
     "android": {
