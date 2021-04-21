@@ -56,7 +56,6 @@ class Storage {
   // Create and populate database tables
   async createTable(downloadCompletedCallback: Function) {
     downloadNMWCodes(NMWSTANDARD).then((nmwTable) => {
-      console.log(nmwTable);
       this.db.transaction((tx) => {
         tx.executeSql(
           "CREATE TABLE IF NOT EXISTS locationCodes (id string primary key not null, description text, categoryDepth int);"
