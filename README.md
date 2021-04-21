@@ -4,6 +4,8 @@
 
 This is a simple mobile application to help determine the correct NMW beacon name to be set for a given NMW location beacon.
 
+***Please note that an Internet connection is required for the app to download the latest list of NMW codes.***
+
 ## Usage
 
 First, you will need the Expo Go app. Then, scan the QR code [here](https://expo.io/@ese-peasy/projects/NarrateMyWay-beacon-setup) to start our app.
